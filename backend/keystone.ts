@@ -4,6 +4,7 @@ import { config, createSchema } from '@keystone-next/keystone/schema';
 import { User } from './schemas/User';
 import { Measurement } from './schemas/Measurement';
 import { withItemData, statelessSessions } from '@keystone-next/keystone/session';
+import { sendPasswordResetEmail } from './lib/mail';
 
 
 const databaseURL = process.env.DATABASE_URL || 'mongodb://localhost/fitness-control-App';
@@ -18,11 +19,14 @@ const { withAuth } = createAuth({
     identityField: 'email',
     secretField: 'password',
     initFirstItem: {
-        fields: ['name', 'email', 'password'],
-    
+        fields: ['name', 'email', 'password'],    
     },
-    
-}) 
+    passwordResetLink: {
+        async sendToken(args) {
+            await sendPasswordResetEmail(args.token, args.identity);
+        }
+    }
+}); 
 
 export default withAuth(config({
     server: {
