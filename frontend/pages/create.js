@@ -1,9 +1,12 @@
 import CreateMeasurement from '../components/CreateMeasurement';
+import PleaseSignIn from '../components/PleaseSignIn';
 
 export default function CreateMeasurementPage() {
     return (
         <div>
-            <CreateMeasurement />
+            <PleaseSignIn>
+                <CreateMeasurement />
+            </PleaseSignIn>
         </div>
     )
 }
