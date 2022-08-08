@@ -3,8 +3,10 @@ import { createAuth } from '@keystone-next/auth';
 import { config, createSchema } from '@keystone-next/keystone/schema';
 import { User } from './schemas/User';
 import { Measurement } from './schemas/Measurement';
+import { Role } from './schemas/Role';
 import { withItemData, statelessSessions } from '@keystone-next/keystone/session';
 import { sendPasswordResetEmail } from './lib/mail';
+import { permissionsList } from './schemas/fields';
 
 
 const databaseURL = process.env.DATABASE_URL || 'mongodb://localhost/fitness-control-App';
@@ -42,7 +44,7 @@ export default withAuth(config({
     lists: createSchema({
         User,
         Measurement,
-        
+        Role,
     }),
     ui: {
         //show the UI only for those with acess
@@ -55,6 +57,6 @@ export default withAuth(config({
     session: withItemData(statelessSessions(sessionConfig), {
         //GraphQL query
 
-        User: `id name email `
-    })
+        User: `id name email role { ${permissionsList.join(' ')} } `
+    }),
 }));

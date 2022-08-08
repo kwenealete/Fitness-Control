@@ -1,10 +1,15 @@
 import { integer, select, relationship, text,  } from '@keystone-next/fields';
 import { list } from '@keystone-next/keystone/schema';
+import { rules, isSignedIn } from '../access';
 
 
 export const Measurement = list({
-    // access: {
-    // },
+    access: {
+        create: isSignedIn,
+        read: rules.canManageMeasurements,
+        update: rules.canManageMeasurements,
+        delete: rules.canManageMeasurements,
+    },
     fields: {
         day: integer({ isRequired: true,}),
         month: text({ isRequired: true}),
@@ -24,7 +29,7 @@ export const Measurement = list({
         }),
         user: relationship({
             ref: 'User.measurements',
-            // defaultValue: ({ context }) => ({ connect: { id: context.session.itemId }, })
+            defaultValue: ({ context }) => ({ connect: { id: context.session.itemId }, })
         })
     },
 });
